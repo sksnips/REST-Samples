@@ -1,0 +1,46 @@
+<!-- HTML snippet returns the values for properties associated to the root web in sharepoint -->
+<script type = "text/javascript" src = "/siteassets/jquery.min.js" > </script>  
+<script type="text/javascript">  
+//jQuery ajax used to call the REST API and get the response  
+jQuery.ajax({  
+url: "https://sharepointsite/_api/site/rootweb",  
+type: "GET",  
+headers: {  
+    "accept": "application/json;odata=verbose",  
+    "content-type": "application/json;odata=verbose",  
+    "X-RequestDigest": $("#__REQUESTDIGEST").val()  
+},  
+success: function(data) {  
+    Rootwebdetails(data);  
+},  
+error: function() {  
+    console.log('fail');  
+}  
+});  
+//Rootwebdetails method used to log the results to the browser console  
+function Rootwebdetails(data)   
+{  
+    console.log("Allow RSS Feeds: " + data.d.AllowRssFeeds);  
+    console.log("AppInstanceId: " + data.d.AppInstanceId);  
+    console.log("Configuration: " + data.d.Configuration);  
+    console.log("Created: " + data.d.Created);  
+    console.log("CustomMasterUrl: " + data.d.CustomMasterUrl);  
+    console.log("Description: " + data.d.Description);  
+    console.log("DocumentLibraryCalloutOfficeWebAppPreviewersDisabled: " + data.d.DocumentLibraryCalloutOfficeWebAppPreviewersDisabled);  
+    console.log("EnableMinimalDownload: " + data.d.EnableMinimalDownload);  
+    console.log("Id: " + data.d.Id);  
+    console.log("Language: " + data.d.Language);  
+    console.log("LastItemModifiedDate: " + data.d.LastItemModifiedDate);  
+    console.log("MasterUrl: " + data.d.MasterUrl);  
+    console.log("QuickLaunchEnabled: " + data.d.QuickLaunchEnabled);  
+    console.log("RecycleBinEnabled: " + data.d.RecycleBinEnabled);  
+    console.log("ServerRelativeUrl: " + data.d.ServerRelativeUrl);  
+    console.log("SyndicationEnabled: " + data.d.SyndicationEnabled);  
+    console.log("Title: " + data.d.Title);  
+    console.log("TreeViewEnabled: " + data.d.TreeViewEnabled);  
+    console.log("UIVersion: " + data.d.UIVersion);  
+    console.log("UIVersionConfigurationEnabled: " + data.d.UIVersionConfigurationEnabled);  
+    console.log("Url: " + data.d.Url);  
+    console.log("WebTemplate: " + data.d.WebTemplate);  
+}   
+< /script>

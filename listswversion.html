@@ -1,0 +1,70 @@
+<!-- HTML snippet returns the collection of lists that are version enabled -->
+<!-- listswversion.html - Lists with version -->
+<!-- Style required for HTML Snippet -->  
+<style type="text/css">     
+.lst-table th{ background-color:#ddd; border:2px solid #fff; text-align:left}     
+.lst-table td{ background-color:#eee; border:2px solid #fff;}     
+.web-heading{ padding:2px;}     
+</style>  
+<!--Include jQuery library to perform dynamic html dom manipulation -->  
+<script type="text/javascript" src="/siteassets/jquery.js"></script>  
+<div>  
+    <h2 class="web-heading">List with versioning enabled</h2>  
+</div>  
+<table width="100%" cellpadding="10" cellspacing="2" id="lstTable" class="lst-table">  
+    <thead>  
+        <tr>  
+            <th></th>  
+            <th>List Title</th>  
+            <th>Id</th>  
+            <th>Version enabled</th>  
+            <th>Items Count</th>  
+        </tr>  
+    </thead>  
+    <tbody></tbody>  
+</table>  
+<!-- Script snippet to perform the required operation-->  
+<!-- Following script returns the collection of lists without versioing -->  
+<script type="text/javascript">  
+function getLists() {  
+var siteurl = _spPageContextInfo.webAbsoluteUrl;  
+    $.ajax({  
+        url: siteurl + "/_api/web/lists?$filter=EnableVersioning%20eq%20true",  
+        method: "GET",  
+        headers: { "Accept": "application/json; odata=verbose" },  
+        success: function (data) {  
+            // Returning the results  
+            onSucceed(data);  
+        },  
+        error: function (data) {  
+            onFailure(data);  
+        }  
+    });  
+}  
+function onSucceed(data){  
+//Collection of lists returned as a result  
+var filterLists = data.d.results;  
+    for(i=0; i  
+    <filterLists.length;i++){  
+    //Get List Image url  
+    var lstimage = "<img src='"+filterLists[i].ImageUrl+"'/>";  
+    var trow = "<tr><td>"+
+                  lstimage+"</td><td>"+
+                  filterLists[i].Title+"</td><td>"+
+                  filterLists[i].Id+"</td><td>"+
+                  filterLists[i].EnableVersioning+"</td><td>"+
+                  filterLists[i].ItemCount+
+                  "</td></tr>";  
+    //Append each list to the table as a row  
+    $("#lstTable tbody").append(trow);  
+    }  
+}  
+function onFailure(error){  
+   alert(error);  
+}  
+function injectMethod(){  
+   getLists();  
+}  
+injectMethod();  
+  
+</script>

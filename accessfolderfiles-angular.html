@@ -1,0 +1,70 @@
+<style type="text/css">  
+.files-table th{ background-color:#ddd; border:2px solid #fff; text-align:left}  
+.files-table td{ background-color:#eee; border:2px solid #fff;}  
+.web-heading{ padding:2px;}  
+</style>  
+<!-- HTML Snippet -->
+<script type="text/javascript" src="/siteassets/angular.min.js"></script>  
+<div ng-app="spng-App">  
+<h2 class="web-heading">Folder and Files</h2>  
+<div ng-controller="spng-WebCtrl">  
+<select id="lib-folder" ng-model="libFolders" ng-options="fldr as fldr.Title for fldr in Folders" >  
+<option value="">--Select Folder--</option>  
+</select>  
+<input type="button" value="Get Files" ng-click="btnGetFiles()"/>  
+<!-- Populate Files based on selected Folder -->  
+<table width="100%" cellpadding="10" cellspacing="2" class="files-table">  
+<thead>  
+<tr>  
+<th>Title</th>  
+<th>Author</th>   
+</tr>  
+</thead>  
+<tbody>  
+<tr ng-repeat="file in Files">  
+<td><a href="{{file.ServerRelativeUrl}}">{{file.Name}}</a></td>  
+<td>{{file.Author.Title}}</td>   
+</tr>  
+</tbody>  
+</table>  
+<p ng-show="!Files.length">There are no files available under this folder.</p>  
+</div>  
+</div>  
+
+<!-- Script Snippet -->
+<script type="text/javascript">  
+var spApp= angular.module('spng-App', []);  
+spApp.controller('spng-WebCtrl', function($scope, $http){  
+  
+//Controller load event to append the choices with folder value to the dropdown  
+$http({  
+method: "GET",  
+url:_spPageContextInfo.webAbsoluteUrl+"/_api/web/lists/getbytitle('DocumentSetLibrary')/items?$select=Id,Title,FileLeafRef,FileDirRef,FileRef,FSObjType&$filter=FSObjType%20eq%201",  
+headers: {"Accept":"application/json;odata=verbose"}  
+}  
+).success(function(data, status, headers, config){  
+//Store the folder collections to the Folders scope variable  
+$scope.Folders = data.d.results;  
+//Set the default value to the dropdown  
+$scope.libFolders = $scope.DocumentSets[0];  
+}).error(function (data, status, headers, config){  
+});  
+  
+//Button click event to populate the files in table  
+$scope.btnGetFiles = function(){  
+//Get the selected folder from the select element  
+var selectedFolder = $scope.libFolders.FileRef+"/";  
+var resturl = _spPageContextInfo.webAbsoluteUrl+"/_api/web/getfolderbyserverrelativeurl('"+selectedFolder+"')/files?$select=Name,Author/Title&$expand=Author/Title";  
+$http({  
+method: "GET",  
+url:resturl,  
+headers: {"Accept":"application/json;odata=verbose"}  
+}  
+).success(function(data, status, headers, config){   
+//Store the filecollection for the folder to the Files scope variable  
+$scope.Files = data.d.results;   
+}).error(function (data, status, headers, config){  
+});  
+}  
+});  
+</script>  
